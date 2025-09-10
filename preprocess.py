@@ -4,12 +4,6 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-import nltk
-
-# Ensure required data is available
-nltk.download('punkt')
-nltk.download('punkt_tab')
-
 # download necessary NLTK data (quietly)
 nltk.download('punkt', quiet=True)
 nltk.download('wordnet', quiet=True)
