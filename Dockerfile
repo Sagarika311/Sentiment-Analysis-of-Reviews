@@ -24,5 +24,8 @@ RUN python -m nltk.downloader punkt punkt_tab stopwords
 # Expose port (optional, Railway auto-detects PORT)
 EXPOSE 5000
 
+RUN python -m nltk.downloader punkt punkt_tab stopwords wordnet
+
 # Run app with Gunicorn (production server)
 CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT} app:app"
+
