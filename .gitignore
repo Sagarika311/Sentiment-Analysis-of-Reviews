@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+*.venv
+env/
+venv/
+ENV/
+
+# Flask / general
+instance/
+*.sqlite3
+*.db
+*.log
+
+# Node / static (if using npm for JS packages)
+node_modules/
+dist/
+build/
+
+# IDEs / editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+*.tar
+*.log
+
+# Pytest / coverage
+htmlcov/
+.coverage
+.cache
+.pytest_cache/
+
+# Misc
+*.bak
+*.swp
