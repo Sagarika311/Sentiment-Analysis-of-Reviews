@@ -18,21 +18,11 @@ RUN pip install -r requirements.txt
 # Copy the rest of the app
 COPY . /app/
 
-# Expose the port Flask will run on
-EXPOSE 5000
-
-# Set environment variable for Flask
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
+# Download required NLTK data
 RUN python -m nltk.downloader punkt punkt_tab
 
-# Command to run the app
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:${PORT}", "app:app"]
+# Expose port (optional, Railway auto-detects PORT)
+EXPOSE 5000
 
-
-
-
-
-
-
+# Run app with Gunicorn (production server)
+CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT} app:app"
