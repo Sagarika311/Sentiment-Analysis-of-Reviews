@@ -2,27 +2,27 @@
 FROM python:3.11-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 # Set working directory
 WORKDIR /app
 
 # Copy requirements.txt first (for caching)
-COPY requirements.txt ./
+COPY requirements.txt /app/
 
-# Upgrade pip and install dependencies
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
 # Copy the rest of the app
-COPY . .
+COPY . /app/
 
-# Download required NLTK data
-RUN python -m nltk.downloader punkt punkt_tab
+# Download required NLTK data at build time (NOT runtime)
+RUN python -m nltk.downloader punkt punkt_tab stopwords
 
-# Expose port (optional, Railway sets $PORT automatically)
+# Expose port (optional, Railway auto-detects PORT)
 EXPOSE 5000
 
-# Run app with Gunicorn (production WSGI server)
+# Run app with Gunicorn (production server)
 CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT} app:app"
