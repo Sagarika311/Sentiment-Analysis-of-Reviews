@@ -1,31 +1,28 @@
-# Use official Python image as base
+# Use a small Python image
 FROM python:3.11-slim
 
-# Set environment variables
+# Prevent Python from writing .pyc files and enable unbuffered output
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements.txt first (for caching)
+# Copy only requirements first (caching)
 COPY requirements.txt /app/
 
-# Install dependencies
+# Upgrade pip and install dependencies
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the app
 COPY . /app/
 
-# Download required NLTK data at build time (NOT runtime)
-RUN python -m nltk.downloader punkt punkt_tab stopwords
+# Download required NLTK data at build time
+RUN python -m nltk.downloader punkt stopwords wordnet
 
-# Expose port (optional, Railway auto-detects PORT)
+# Expose the port (Render automatically sets PORT env)
 EXPOSE 5000
 
-RUN python -m nltk.downloader punkt punkt_tab stopwords wordnet
-
-# Run app with Gunicorn (production server)
-CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT} app:app"
-
+# Run app with Gunicorn, using environment PORT variable if set
+CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} app:app"]
