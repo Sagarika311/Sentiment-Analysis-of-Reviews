@@ -19,10 +19,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Download required NLTK data at build time
-RUN python -m nltk.downloader punkt stopwords wordnet
+RUN python -m nltk.downloader punkt punkt_tab stopwords wordnet
 
 # Expose the port (Render automatically sets PORT env)
 EXPOSE 5000
 
 # Run app with Gunicorn, using environment PORT variable if set
 CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} app:app"]
+
