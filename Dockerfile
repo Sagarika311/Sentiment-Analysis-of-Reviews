@@ -1,4 +1,4 @@
-# Use a small Python image with slim-buster
+# Use a small Python image
 FROM python:3.11-slim
 
 # Prevent Python from writing .pyc files and enable unbuffered output
@@ -8,17 +8,13 @@ ENV PYTHONUNBUFFERED 1
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies needed for NLTK
+# Install minimal system dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    build-essential \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends build-essential wget && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy only requirements first (for caching)
+# Copy requirements and install dependencies
 COPY requirements.txt /app/
-
-# Upgrade pip and install dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -28,8 +24,8 @@ COPY . /app/
 # Download NLTK data at build time
 RUN python -m nltk.downloader punkt stopwords wordnet
 
-# Expose the port (Render automatically sets PORT env)
+# Expose port (Render sets PORT env)
 EXPOSE 5000
 
-# Run app with Gunicorn, using environment PORT variable if set
+# Run the app with Gunicorn
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:${PORT:-5000}", "app:app"]
