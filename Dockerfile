@@ -27,5 +27,7 @@ RUN python -m nltk.downloader punkt stopwords wordnet
 # Expose port (Render sets PORT env)
 EXPOSE 5000
 
-# Run the app with Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:${PORT:-5000}", "app:app"]
+# Run the app with Gunicorn (expands PORT env)
+CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} app:app"
+
+
