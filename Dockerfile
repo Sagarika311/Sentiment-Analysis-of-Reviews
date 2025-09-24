@@ -1,4 +1,4 @@
-# Use small Python image
+# Use a small Python image
 FROM python:3.11-slim
 
 # Prevent Python from writing .pyc files and enable unbuffered output
@@ -24,5 +24,5 @@ RUN python -m nltk.downloader punkt punkt_tab stopwords wordnet
 # Expose port (Render sets PORT env)
 EXPOSE 5000
 
-# Run app with Gunicorn
-CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} --timeout 120 app:app"
+# Run app with Gunicorn: 4 workers, 5-minute timeout
+CMD sh -c "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} --timeout 300 app:app"
