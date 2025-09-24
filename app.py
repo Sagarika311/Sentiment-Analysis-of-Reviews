@@ -5,6 +5,10 @@ import traceback
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import numpy as np
+import nltk
+
+# Ensure NLTK uses the correct data path in Docker/Render
+nltk.data.path.append("/root/nltk_data")  # matches Dockerfile download path
 
 # Ensure preprocess module is importable (needed for unpickling tokenizer if used)
 import preprocess  # noqa: F401
