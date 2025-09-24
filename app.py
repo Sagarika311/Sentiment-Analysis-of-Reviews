@@ -7,11 +7,17 @@ from flask_cors import CORS
 import numpy as np
 import nltk
 
-# Ensure NLTK uses the correct data path in Docker/Render
-nltk.data.path.append("/root/nltk_data")  # matches Dockerfile download path
-
 # Ensure preprocess module is importable (needed for unpickling tokenizer if used)
 import preprocess  # noqa: F401
+
+# Download required NLTK resources at runtime if missing
+NLTK_DATA_PATH = "/root/nltk_data"
+nltk.data.path.append(NLTK_DATA_PATH)
+for resource in ["punkt", "punkt_tab", "stopwords", "wordnet"]:
+    try:
+        nltk.data.find(f"tokenizers/{resource}" if "punkt" in resource else f"corpora/{resource}")
+    except LookupError:
+        nltk.download(resource, download_dir=NLTK_DATA_PATH)
 
 # Environment variables
 MODEL_PATH = os.environ.get("MODEL_PATH", "models/pipeline.pkl")
@@ -64,11 +70,9 @@ def predict():
             "all_scores": {k: round(v, 2) for k, v in scores.items()}
         })
     except Exception as e:
-        # Log full traceback
         print("Predict proba failed:", e)
         traceback.print_exc()
         try:
-            # Fallback to predict
             pred = pipeline.predict([text])[0]
             label = LABEL_MAP.get(pred, str(pred))
             return jsonify({
