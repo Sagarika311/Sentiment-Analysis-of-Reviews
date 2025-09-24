@@ -10,14 +10,8 @@ import nltk
 # Ensure preprocess module is importable (needed for unpickling tokenizer if used)
 import preprocess  # noqa: F401
 
-# Download required NLTK resources at runtime if missing
-NLTK_DATA_PATH = "/root/nltk_data"
-nltk.data.path.append(NLTK_DATA_PATH)
-for resource in ["punkt", "punkt_tab", "stopwords", "wordnet"]:
-    try:
-        nltk.data.find(f"tokenizers/{resource}" if "punkt" in resource else f"corpora/{resource}")
-    except LookupError:
-        nltk.download(resource, download_dir=NLTK_DATA_PATH)
+import nltk
+nltk.data.path.append("/root/nltk_data")  # already populated in Docker build
 
 # Environment variables
 MODEL_PATH = os.environ.get("MODEL_PATH", "models/pipeline.pkl")
