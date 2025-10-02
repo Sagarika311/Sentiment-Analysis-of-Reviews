@@ -63,7 +63,7 @@ Sentiment-Analyzer/
 1. **Clone repository**
 
    ```bash
-   git clone https://github.com/your-username/Sentiment-Analyzer.git
+   git clone https://github.com/Sagarika311/Sentiment-Analyzer.git
    cd Sentiment-Analyzer
    ```
 
